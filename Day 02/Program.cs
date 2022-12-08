@@ -23,7 +23,7 @@ namespace Day_02 {
         }
 
         protected override object SolvePart2(IEnumerable<StrategyGuideEntry> input) {
-            return null;
+            return input.Select(x => x.ChangeChoiceToGetResult().Score()).Sum();
         }
 
     }
