@@ -29,7 +29,7 @@ namespace Day_04 {
         }
 
         protected override object SolvePart2(IEnumerable<Range[]> input) {
-            return null;
+            return input.Where(x => x[0].Intersects(x[1])).Count();
         }
 
     }
@@ -38,6 +38,10 @@ namespace Day_04 {
 
         public static bool ContainsRange(this Range range, Range other) {
             return (other.Start.Value >= range.Start.Value && other.End.Value <= range.End.Value);
+        }
+
+        public static bool Intersects(this Range range, Range other) {
+            return (other.Start.Value <= range.End.Value && other.End.Value >= range.Start.Value);
         }
 
     }
