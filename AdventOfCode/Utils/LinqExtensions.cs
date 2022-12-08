@@ -34,5 +34,13 @@ namespace AdventOfCode.Utils {
 			}
 		}
 
+		public static string GetString(this IEnumerable<char> source) {
+			StringBuilder sb = new();
+			foreach(char c in source) {
+				sb.Append(c);
+            }
+			return sb.ToString();
+        }
+
 	}
 }
