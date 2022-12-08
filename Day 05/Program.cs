@@ -42,7 +42,11 @@ namespace Day_05 {
         }
 
         protected override object SolvePart2(Tuple<CrateStacks, CraneOperation[]> input) {
-            return null;
+            foreach (CraneOperation op in input.Item2) {
+                input.Item1.Apply(op, true);
+            }
+
+            return input.Item1.Stacks.Select(x => x.Peek()).GetString();
         }
 
     }
@@ -57,11 +61,21 @@ namespace Day_05 {
             }
         }
 
-        public void Apply(CraneOperation op) {
+        public void Apply(CraneOperation op, bool keepOrder = false) {
             Stack<char> source = Stacks[op.From];
             Stack<char> dest = Stacks[op.To];
-            for(int i = 0; i < op.Count; i++) {
-                dest.Push(source.Pop());
+            if (keepOrder) {
+                Stack<char> doubleStack = new(op.Count);
+                for (int i = 0; i < op.Count; i++) {
+                    doubleStack.Push(source.Pop());
+                }
+                for (int i = 0; i < op.Count; i++) {
+                    dest.Push(doubleStack.Pop());
+                }
+            } else {
+                for (int i = 0; i < op.Count; i++) {
+                    dest.Push(source.Pop());
+                }
             }
         }
 
