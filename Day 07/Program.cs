@@ -37,9 +37,23 @@ namespace Day_07 {
             return sum;
         }
 
-
         protected override object SolvePart2(Directory root) {
-            return null;
+            return Part2Recursive(root, 30000000L - (70000000L - root.Size));
+        }
+
+        private long Part2Recursive(IFileSystem search, long requiredSpace) {
+            long smallestSize = long.MaxValue;
+            if (search.Size >= requiredSpace) {
+                if (search.Size < smallestSize) {
+                    smallestSize = search.Size;
+                }
+            }
+
+            foreach(IFileSystem fileSystem in search.Children) {
+                smallestSize = Math.Min(smallestSize, Part2Recursive(fileSystem, requiredSpace));
+            }
+
+            return smallestSize;
         }
 
     }
