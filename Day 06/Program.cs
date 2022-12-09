@@ -27,7 +27,13 @@ namespace Day_06 {
         }
 
         protected override object SolvePart2(string input) {
-            return null;
+            // Lol this is so bad and slow but I dont care right now
+            for (int i = 0; i < input.Length - 4; i++) {
+                if (input.Skip(i).Take(14).Distinct().Count() == 14) {
+                    return i + 14;
+                }
+            }
+            return "Error";
         }
 
     }
