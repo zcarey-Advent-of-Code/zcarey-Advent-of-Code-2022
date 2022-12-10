@@ -65,7 +65,22 @@ namespace Day_09 {
         }
 
         protected override object SolvePart2(IEnumerable<Direction> input) {
-            return null;
+            HashSet<Point> positions = new();
+            Point[] knots = new Point[10];
+            positions.Add(knots[9]); // Track the tail!
+
+            foreach (Direction dir in input) {
+                for (int i = 0; i < dir.Count; i++) {
+                    knots[0] += dir;
+                    //Simulate all the knots
+                    for (int knot = 1; knot < knots.Length; knot++) {
+                        Simulate(knots[knot - 1], ref knots[knot]);
+                    }
+                    positions.Add(knots[9]); // Track the tail!
+                }
+            }
+
+            return positions.Count;
         }
 
     }
