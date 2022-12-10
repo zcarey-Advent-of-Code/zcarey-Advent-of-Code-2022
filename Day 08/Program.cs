@@ -136,7 +136,71 @@ namespace Day_08 {
         }
 
         protected override object SolvePart2(int[][] input) {
-            return null;
+            int width = input[0].Length;
+            int height = input.Length;
+            int[,] scenicScore = new int[width, height];
+
+            for(int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    scenicScore[x, y] = calculateScenicScore(input, width, height, x, y);
+                }
+            }
+
+            return scenicScore.Values().Max();
+        }
+
+        private static int calculateScenicScore(int[][] input, int width, int height, int treeX, int treeY) {
+            int treeHeight = input[treeY][treeX];
+            int scenicScore = 1;
+            int distance;
+
+            // Check left
+            distance = 0;
+            for(int x = treeX - 1; x >= 0; x--) {
+                distance++;
+                if (input[treeY][x] >= treeHeight) {
+                    break;
+                }
+            }
+            scenicScore *= distance;
+            if (scenicScore == 0)
+                return 0;
+
+            // Check right
+            distance = 0;
+            for (int x = treeX + 1; x < width; x++) {
+                distance++;
+                if (input[treeY][x] >= treeHeight) {
+                    break;
+                }
+            }
+            scenicScore *= distance;
+            if (scenicScore == 0)
+                return 0;
+
+            // Check up
+            distance = 0;
+            for (int y = treeY - 1; y >= 0; y--) {
+                distance++;
+                if (input[y][treeX] >= treeHeight) {
+                    break;
+                }
+            }
+            scenicScore *= distance;
+            if (scenicScore == 0)
+                return 0;
+
+            // Check down
+            distance = 0;
+            for (int y = treeY + 1; y < height; y++) {
+                distance++;
+                if (input[y][treeX] >= treeHeight) {
+                    break;
+                }
+            }
+            scenicScore *= distance;
+
+            return scenicScore;
         }
 
     }
