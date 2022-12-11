@@ -10,23 +10,23 @@ namespace Day_11 {
 
         public int ID { get; private set; }
 
-        Queue<int> Items;
+        Queue<long> Items;
         Operation WorryOperation;
-        int Test;
+        public int Test { get; private set; }
         int MonkeyIfTrue;
         int MonkeyIfFalse;
 
 
-        public void Simulate(Monkey[] monkeys, ref int inspectionCount) {
+        public void Simulate(Monkey[] monkeys, ref long inspectionCount, Func<long, long> WorryReducer) {
             while (Items.Count > 0) {
-                int worryLevel = Items.Dequeue();
+                long worryLevel = Items.Dequeue();
 
                 // INSPECT!
                 worryLevel = WorryOperation.Calculate(worryLevel);
                 inspectionCount++;
 
                 // Phew, the item didn't break!
-                worryLevel /= 3;
+                worryLevel = WorryReducer(worryLevel);
 
                 // Now what does the monkey do?
                 int nextMonkey = ((worryLevel % Test) == 0) ? MonkeyIfTrue : MonkeyIfFalse;
@@ -41,7 +41,7 @@ namespace Day_11 {
 
             if (!input[1].StartsWith("  Starting items: "))
                 throw new ArgumentException("Bad input.");
-            Items = new Queue<int>(input[1].Substring("  Starting items: ".Length).Split(", ").Select(int.Parse));
+            Items = new Queue<long>(input[1].Substring("  Starting items: ".Length).Split(", ").Select(long.Parse));
 
             if (!input[2].StartsWith("  Operation: "))
                 throw new ArgumentException("Bad input.");

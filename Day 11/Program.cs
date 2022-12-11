@@ -17,30 +17,39 @@ namespace Day_11 {
 
 		static void Main(string[] args) {
 			new Program().Run(args);
+			//new Program().Run(args, "Example.txt");
 		}
 
 		protected override object SolvePart1(Monkey[] input) {
-			int[] inspections = new int[input.Length];
+			long[] inspections = new long[input.Length];
+			Func<long, long> WorryReducer = x => x / 3;
 			for(int round = 0; round < 20; round++) {
-				SimulateRound(input, inspections);
+				SimulateRound(input, inspections, WorryReducer);
             }
-			int[] TopTwoMonkeys = inspections.OrderByDescending(x => x).Take(2).ToArray();
+			long[] TopTwoMonkeys = inspections.OrderByDescending(x => x).Take(2).ToArray();
 			return TopTwoMonkeys[0] * TopTwoMonkeys[1];
 		}
 
-		private void SimulateRound(Monkey[] monkeys, int[] inspections = null) {
+		private void SimulateRound(Monkey[] monkeys, long[] inspections, Func<long, long> WorryReducer) {
 			for(int i = 0; i < monkeys.Length; i++) {
-				if (inspections == null) {
-					int temp = 0;
-					monkeys[i].Simulate(monkeys, ref temp);
-                } else {
-					monkeys[i].Simulate(monkeys, ref inspections[i]);
-                }
+				monkeys[i].Simulate(monkeys, ref inspections[i], WorryReducer);
             }
         }
 
 		protected override object SolvePart2(Monkey[] input) {
-			return null;
+			// Calculate prime product
+			long primeProduct = 1;
+			foreach(Monkey monkey in input) {
+				primeProduct *= monkey.Test;
+            }
+
+			long[] inspections = new long[input.Length];
+			Func<long, long> WorryReducer = x => x % primeProduct;
+			for (int round = 0; round < 10000; round++) {
+				SimulateRound(input, inspections, WorryReducer);
+			}
+			long[] TopTwoMonkeys = inspections.OrderByDescending(x => x).Take(2).ToArray();
+			return (long)TopTwoMonkeys[0] * (long)TopTwoMonkeys[1];
 		}
 
 	}

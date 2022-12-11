@@ -14,8 +14,8 @@ namespace Day_11 {
 
         private Operation() { }
 
-        public int Calculate(int old) {
-            int arg2 = old;
+        public long Calculate(long old) {
+            long arg2 = old;
             if (!ArgIsOld)
                 arg2 = this.Arg;
 
