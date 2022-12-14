@@ -44,7 +44,35 @@ namespace Day_13 {
         }
 
         protected override object SolvePart2(IEnumerable<(PacketList Packet1, PacketList Packet2)> input) {
-            return null;
+            List<PacketList> packets = input.SelectMany(GetPacketEnumerable).ToList();
+            packets.Add(new PacketList(new PacketList(new PacketValue(2))));
+            packets.Add(new PacketList(new PacketList(new PacketValue(6))));
+            packets.Sort((PacketList left, PacketList right) => -left.Compare(right));
+
+            int dividerIndex2 = -1;
+            int dividerIndex6 = -1;
+            for(int i = 0; i < packets.Count; i++) {
+                PacketList packet = packets[i];
+                if (packet.Elements.Length == 1 && packet.Elements[0] is PacketList list) {
+                    if (list.Elements.Length == 1 && list.Elements[0] is PacketValue value) {
+                        if (value.Value == 2) {
+                            dividerIndex2 = i;
+                        } else if (value.Value == 6) {
+                            dividerIndex6 = i;
+                        }
+                    }
+                }
+            }
+
+            if (dividerIndex2 < 0 || dividerIndex6 < 0)
+                throw new Exception("Could not find divider packets");
+
+            return (dividerIndex2 + 1) * (dividerIndex6 + 1);
+        }
+
+        private static IEnumerable<PacketList> GetPacketEnumerable((PacketList Packet1, PacketList Packet2) input) {
+            yield return input.Packet1;
+            yield return input.Packet2;
         }
 
     }
@@ -66,9 +94,9 @@ namespace Day_13 {
 
     internal struct PacketValue : IPacketData {
 
-        int Value;
+        public int Value;
 
-        private PacketValue(int v) {
+        public PacketValue(int v) {
             this.Value = v;
         }
 
@@ -108,7 +136,7 @@ namespace Day_13 {
 
         public IPacketData[] Elements;
 
-        public PacketList(IPacketData[] elements) {
+        public PacketList(params IPacketData[] elements) {
             Elements = elements;
         }
 
