@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Day_15 {
     internal class Program : ProgramStructure<Map> {
@@ -41,8 +43,25 @@ namespace Day_15 {
             return locations.Count - input.Beacons.Where(p => p.Y == y).Count();
         }
 
-        protected override object SolvePart2(Map input) {
-            return null;
+        protected override object SolvePart2(Map input) { 
+            for (int y = 0; y <= 4000000; y++) {
+                for (int x = 0; x <= 4000000; x++) {
+                    bool skip = false;
+                    foreach (Sensor sensor in input.Sensors) {
+                        if (sensor.BeaconDistance >= sensor.Location.ManhattanDistance(new Point(x, y))) {
+                            x = sensor.Location.X + sensor.BeaconDistance - Math.Abs(sensor.Location.Y - y);
+                            skip = true;
+                            break;
+                        }
+                    }
+
+                    if (!skip) {
+                        return new BigInteger(x) * 4000000 + y;
+                    }
+                }
+            }
+
+            return "Could not find solution.";
         }
 
     }
